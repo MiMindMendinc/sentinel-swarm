@@ -1,68 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="460" viewBox="0 0 1280 460" role="img" aria-labelledby="title desc">
-  <title id="title">Sentinel Swarm v0.1.0 architecture</title>
-  <desc id="desc">Browser UI connects to FastAPI over HTTP and WebSocket. FastAPI calls a deterministic mission engine that coordinates five observable roles and writes to an isolated mission workspace containing events.jsonl and report.md.</desc>
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0a0a0b"/>
-      <stop offset="1" stop-color="#111827"/>
-    </linearGradient>
-    <linearGradient id="accent" x1="0" x2="1">
-      <stop offset="0" stop-color="#00e5ff"/>
-      <stop offset="1" stop-color="#3b82f6"/>
-    </linearGradient>
-    <linearGradient id="node" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#152033"/>
-      <stop offset="1" stop-color="#101826"/>
-    </linearGradient>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#55d8ff"/>
-    </marker>
-  </defs>
-  <rect width="1280" height="460" rx="28" fill="url(#bg)"/>
-  <rect x="1.5" y="1.5" width="1277" height="457" rx="26.5" fill="none" stroke="#1f3a55"/>
-  <text x="48" y="52" fill="#f2f2f4" font-family="system-ui,Inter,Arial,sans-serif" font-size="26" font-weight="800">Sentinel Swarm v0.1.0  Evidence-First Architecture</text>
-  <text x="48" y="82" fill="#8a8a93" font-family="system-ui,Inter,Arial,sans-serif" font-size="15">Local deterministic mission flow · no network scanning · no arbitrary shell · no autonomous exploitation</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="460" viewBox="0 0 1280 460" role="img">
+  <rect width="1280" height="460" rx="28" fill="#0a0a0b"/>
+  <rect x="2" y="2" width="1276" height="456" rx="26" fill="none" stroke="#1f3a55"/>
+  <text x="48" y="52" fill="#f2f2f4" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700">Sentinel Swarm v0.1.0 - Evidence-First Architecture</text>
+  <text x="48" y="82" fill="#8a8a93" font-family="Arial,Helvetica,sans-serif" font-size="15">Local deterministic mission flow. No network scanning. No arbitrary shell. No autonomous exploitation.</text>
 
-  <g font-family="system-ui,Inter,Arial,sans-serif">
-    <rect x="48" y="128" width="220" height="108" rx="18" fill="url(#node)" stroke="#24556f"/>
-    <text x="158" y="174" text-anchor="middle" fill="#9eefff" font-size="18" font-weight="700">WEB UI</text>
-    <text x="158" y="202" text-anchor="middle" fill="#b8c8d5" font-size="14">Mission console</text>
+  <rect x="48" y="128" width="220" height="108" rx="18" fill="#152033" stroke="#24556f"/>
+  <text x="158" y="174" text-anchor="middle" fill="#9eefff" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700">WEB UI</text>
+  <text x="158" y="202" text-anchor="middle" fill="#b8c8d5" font-family="Arial,Helvetica,sans-serif" font-size="14">Mission console</text>
 
-    <rect x="332" y="128" width="230" height="108" rx="18" fill="url(#node)" stroke="#24556f"/>
-    <text x="447" y="174" text-anchor="middle" fill="#9eefff" font-size="18" font-weight="700">FASTAPI</text>
-    <text x="447" y="202" text-anchor="middle" fill="#b8c8d5" font-size="14">HTTP + WebSocket</text>
+  <rect x="332" y="128" width="230" height="108" rx="18" fill="#152033" stroke="#24556f"/>
+  <text x="447" y="174" text-anchor="middle" fill="#9eefff" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700">FASTAPI</text>
+  <text x="447" y="202" text-anchor="middle" fill="#b8c8d5" font-family="Arial,Helvetica,sans-serif" font-size="14">HTTP + WebSocket</text>
 
-    <rect x="626" y="118" width="250" height="128" rx="18" fill="url(#node)" stroke="#2b8ba8"/>
-    <text x="751" y="164" text-anchor="middle" fill="#9eefff" font-size="18" font-weight="700">MISSION ENGINE</text>
-    <text x="751" y="192" text-anchor="middle" fill="#b8c8d5" font-size="14">Deterministic orchestration</text>
-    <text x="751" y="218" text-anchor="middle" fill="#7ee6a7" font-size="13">Evidence-first contract</text>
+  <rect x="626" y="118" width="250" height="128" rx="18" fill="#152033" stroke="#2b8ba8"/>
+  <text x="751" y="164" text-anchor="middle" fill="#9eefff" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700">MISSION ENGINE</text>
+  <text x="751" y="192" text-anchor="middle" fill="#b8c8d5" font-family="Arial,Helvetica,sans-serif" font-size="14">Deterministic orchestration</text>
+  <text x="751" y="218" text-anchor="middle" fill="#7ee6a7" font-family="Arial,Helvetica,sans-serif" font-size="13">Evidence-first contract</text>
 
-    <rect x="940" y="118" width="292" height="128" rx="18" fill="url(#node)" stroke="#2a7c61"/>
-    <text x="1086" y="164" text-anchor="middle" fill="#80f0b0" font-size="18" font-weight="700">ISOLATED WORKSPACE</text>
-    <text x="1086" y="192" text-anchor="middle" fill="#b8c8d5" font-size="14">Patched sshd_config copy</text>
-    <text x="1086" y="218" text-anchor="middle" fill="#b8c8d5" font-size="14">events.jsonl · report.md</text>
-  </g>
+  <rect x="940" y="118" width="292" height="128" rx="18" fill="#152033" stroke="#2a7c61"/>
+  <text x="1086" y="164" text-anchor="middle" fill="#80f0b0" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700">ISOLATED WORKSPACE</text>
+  <text x="1086" y="192" text-anchor="middle" fill="#b8c8d5" font-family="Arial,Helvetica,sans-serif" font-size="14">Patched sshd_config copy</text>
+  <text x="1086" y="218" text-anchor="middle" fill="#b8c8d5" font-family="Arial,Helvetica,sans-serif" font-size="14">events.jsonl  report.md</text>
 
-  <g stroke="#55d8ff" stroke-width="3" fill="none" marker-end="url(#arrow)">
-    <path d="M268 182 H326"/>
-    <path d="M562 182 H620"/>
-    <path d="M876 182 H934"/>
-  </g>
-  <text x="297" y="166" text-anchor="middle" fill="#8a8a93" font-family="system-ui,Inter,Arial,sans-serif" font-size="12">HTTP / WS</text>
+  <path d="M268 182 H326" stroke="#55d8ff" stroke-width="3"/>
+  <path d="M320 176 L332 182 L320 188 Z" fill="#55d8ff"/>
+  <path d="M562 182 H620" stroke="#55d8ff" stroke-width="3"/>
+  <path d="M614 176 L626 182 L614 188 Z" fill="#55d8ff"/>
+  <path d="M876 182 H934" stroke="#55d8ff" stroke-width="3"/>
+  <path d="M928 176 L940 182 L928 188 Z" fill="#55d8ff"/>
+  <text x="297" y="166" text-anchor="middle" fill="#8a8a93" font-family="Arial,Helvetica,sans-serif" font-size="12">HTTP / WS</text>
 
-  <path d="M751 246 V286 H158 V318 M751 286 H447 V318 M751 286 H751 V318 M751 286 H1086 V318 M751 286 H1218 V318" stroke="#376a83" stroke-width="2" fill="none"/>
+  <path d="M751 246 V286 H158 V318" stroke="#376a83" stroke-width="2" fill="none"/>
+  <path d="M751 286 H447 V318" stroke="#376a83" stroke-width="2" fill="none"/>
+  <path d="M751 286 V318" stroke="#376a83" stroke-width="2" fill="none"/>
+  <path d="M751 286 H1086 V318" stroke="#376a83" stroke-width="2" fill="none"/>
+  <path d="M751 286 H1218 V318" stroke="#376a83" stroke-width="2" fill="none"/>
 
-  <g font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="13">
-    <rect x="48" y="326" width="220" height="52" rx="14" fill="#101826" stroke="#24556f"/>
-    <text x="158" y="358" text-anchor="middle" fill="#9eefff">RECON</text>
-    <rect x="332" y="326" width="230" height="52" rx="14" fill="#101826" stroke="#24556f"/>
-    <text x="447" y="358" text-anchor="middle" fill="#9eefff">EXPLOIT-ANALYSIS</text>
-    <rect x="626" y="326" width="250" height="52" rx="14" fill="#101826" stroke="#24556f"/>
-    <text x="751" y="358" text-anchor="middle" fill="#9eefff">THREAT-MODEL</text>
-    <rect x="940" y="326" width="140" height="52" rx="14" fill="#101826" stroke="#24556f"/>
-    <text x="1010" y="358" text-anchor="middle" fill="#9eefff">SECURE-CODING</text>
-    <rect x="1092" y="326" width="140" height="52" rx="14" fill="#101826" stroke="#24556f"/>
-    <text x="1162" y="358" text-anchor="middle" fill="#9eefff">REPORT-WRITER</text>
-  </g>
-  <text x="48" y="418" fill="#6b7280" font-family="system-ui,Inter,Arial,sans-serif" font-size="12">Five observable deterministic roles · isolated mission copy only · SHA-256 evidence ledger</text>
+  <rect x="48" y="326" width="220" height="52" rx="14" fill="#101826" stroke="#24556f"/>
+  <text x="158" y="358" text-anchor="middle" fill="#9eefff" font-family="Courier New,monospace" font-size="13">RECON</text>
+  <rect x="332" y="326" width="230" height="52" rx="14" fill="#101826" stroke="#24556f"/>
+  <text x="447" y="358" text-anchor="middle" fill="#9eefff" font-family="Courier New,monospace" font-size="13">EXPLOIT-ANALYSIS</text>
+  <rect x="626" y="326" width="250" height="52" rx="14" fill="#101826" stroke="#24556f"/>
+  <text x="751" y="358" text-anchor="middle" fill="#9eefff" font-family="Courier New,monospace" font-size="13">THREAT-MODEL</text>
+  <rect x="940" y="326" width="140" height="52" rx="14" fill="#101826" stroke="#24556f"/>
+  <text x="1010" y="358" text-anchor="middle" fill="#9eefff" font-family="Courier New,monospace" font-size="12">SECURE-CODING</text>
+  <rect x="1092" y="326" width="140" height="52" rx="14" fill="#101826" stroke="#24556f"/>
+  <text x="1162" y="358" text-anchor="middle" fill="#9eefff" font-family="Courier New,monospace" font-size="12">REPORT-WRITER</text>
+  <text x="48" y="418" fill="#6b7280" font-family="Arial,Helvetica,sans-serif" font-size="12">Five observable deterministic roles. Isolated mission copy only. SHA-256 evidence ledger.</text>
 </svg>
