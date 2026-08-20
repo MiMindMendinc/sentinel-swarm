@@ -1,0 +1,8 @@
+services:
+  sentinel:
+    build: .
+    ports:
+      - "7777:7777"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
