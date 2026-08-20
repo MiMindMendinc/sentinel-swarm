@@ -97,8 +97,16 @@ Each mission also writes `data/<mission_id>/events.jsonl` and `data/<mission_id>
 ## Architecture
 
 <p align="center">
-  <img src="assets/architecture.svg" alt="Sentinel Swarm v0.1.0 architecture: Web UI to FastAPI over HTTP and WebSocket, deterministic mission engine, five observable roles, and an isolated workspace with events.jsonl and report.md" width="100%">
+  <img src="assets/architecture.png" alt="Sentinel Swarm v0.1.0 architecture: Web UI to FastAPI over HTTP and WebSocket, deterministic mission engine, five observable roles, and an isolated workspace with events.jsonl and report.md" width="900">
 </p>
+
+```text
+WEB UI  --HTTP/WS-->  FASTAPI  -->  MISSION ENGINE  -->  ISOLATED WORKSPACE
+                                         |
+                    RECON · EXPLOIT-ANALYSIS · THREAT-MODEL · SECURE-CODING · REPORT-WRITER
+                                         |
+                              events.jsonl  +  report.md
+```
 
 The current "agents" are explicit deterministic roles in the mission engine. A live LLM is **not** required or claimed in v0.1.0.
 

@@ -10,7 +10,7 @@
 - Added non-root Docker packaging, read-only Compose runtime, dropped Linux capabilities, `no-new-privileges`, and container healthchecks.
 - Expanded regression coverage to HTTP validation and WebSocket input limits.
 - Added Python 3.11/3.12 GitHub Actions CI, Dependabot, issue templates, PR template, security/contribution docs, and a polished badge-rich README.
-- Replaced the README Mermaid architecture block with a static SVG and added live console / evidence screenshots.
+- Replaced the README Mermaid architecture block with a static PNG diagram GitHub can render on mobile and desktop.
 - Documented and test-locked the bundled fixture SHA-256 digests.
 - Added v0.1.0 GitHub Release notes and a tag-triggered release workflow.
 - Added `.dockerignore` and a Makefile for common developer workflows.
