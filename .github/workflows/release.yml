@@ -26,6 +26,10 @@ jobs:
             echo "Missing release notes file: ${notes}" >&2
             exit 1
           fi
+          if gh release view "${tag}" >/dev/null 2>&1; then
+            echo "GitHub Release ${tag} already exists; skipping create"
+            exit 0
+          fi
           gh release create "${tag}" \
             --title "${title}" \
             --notes-file "${notes}" \
