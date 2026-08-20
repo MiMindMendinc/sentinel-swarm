@@ -1,7 +1,12 @@
+import hashlib
+
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.mission import ROOT, run_mission
+from app.mission import RANGE, ROOT, run_mission
+
+FIXTURE_SHA256_BEFORE = "846a4fa9f53987da218fbda4e242eb07cdbf154c0ff1f027d94cd1fda554fdfa"
+FIXTURE_SHA256_AFTER = "a144438e493b12fa3c265a4fa87bd762de2d51dfdc1333ccf0dfa376105bba46"
 
 client = TestClient(app)
 
@@ -40,7 +45,11 @@ def test_mission_real_patch_report_and_ledger():
     assert "PermitRootLogin no" in text
     assert "PasswordAuthentication no" in text
     assert "PermitRootLogin yes" not in text
+    assert hashlib.sha256(RANGE.read_bytes()).hexdigest() == FIXTURE_SHA256_BEFORE
+    assert hashlib.sha256(target.read_bytes()).hexdigest() == FIXTURE_SHA256_AFTER
     assert len(ledger.read_text(encoding="utf-8").splitlines()) == 6
+    assert FIXTURE_SHA256_BEFORE in report.read_text(encoding="utf-8")
+    assert FIXTURE_SHA256_AFTER in report.read_text(encoding="utf-8")
 
 
 def test_http_validation_rejects_empty_task():

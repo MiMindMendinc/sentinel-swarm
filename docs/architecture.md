@@ -4,6 +4,8 @@ Sentinel Swarm v0.1.0 is intentionally small, deterministic, and evidence-first.
 
 ## Runtime flow
 
+The README uses a static SVG of this flow (`assets/architecture.svg`) plus live console screenshots.
+
 ```text
 Browser UI
    │

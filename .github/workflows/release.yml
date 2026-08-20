@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  github-release:
+    name: Publish GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          notes="docs/release-${tag}.md"
+          title="${tag} — Evidence-First Local Swarm"
+          if [ ! -f "${notes}" ]; then
+            echo "Missing release notes file: ${notes}" >&2
+            exit 1
+          fi
+          gh release create "${tag}" \
+            --title "${title}" \
+            --notes-file "${notes}" \
+            --verify-tag

@@ -4,29 +4,21 @@
 
 **Local AI cybersecurity agents you can actually watch work.**
 
-[![CI](https://github.com/MiMindMendinc/sentinel-swarm/actions/workflows/ci.yml/badge.svg)](https://github.com/MiMindMendinc/sentinel-swarm/actions/workflows/ci.yml)
+[![CI](https://github.com/MiMindMendinc/sentinel-swarm/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/MiMindMendinc/sentinel-swarm/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/MiMindMendinc/sentinel-swarm?display_name=tag)](https://github.com/MiMindMendinc/sentinel-swarm/releases)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.128-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Docker](https://img.shields.io/badge/docker-compose-2496ED?logo=docker&logoColor=white)](docker-compose.yml)
+[![pytest](https://img.shields.io/badge/tests-pytest-0A9EDC?logo=pytest&logoColor=white)](tests/test_mission.py)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Local First](https://img.shields.io/badge/default-local--first-00c853)](#truthful-scope)
-[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-<img src="assets/hero.svg" alt="Sentinel Swarm mission console" width="900">
+**LOCAL · EVIDENCE-FIRST · REPRODUCIBLE**
 
-**LOCAL · EVIDENCED · REPRODUCIBLE**
+<img src="assets/console-verified.jpg" alt="Sentinel Swarm v0.1.0 mission console after a verified SSH hardening run, with backend online, five agent roles, truth mode, and SHA-256 evidence in the mission stream" width="900">
 
 </div>
 
-Sentinel Swarm is an evidence-first, local multi-agent cybersecurity lab. **v0.1.0** turns the original UI concept into a reproducible backend-driven demo: five named agent roles inspect a real SSH configuration fixture, challenge unsupported claims, apply a hardening patch to an isolated mission copy, verify the result, and write an evidence-backed report.
-
-## Why this repo is different
-
-- **Truthful by construction** — implemented capabilities are clearly separated from planned ones.
-- **Five observable roles** — `RECON`, `EXPLOIT-ANALYSIS`, `THREAT-MODEL`, `SECURE-CODING`, and `REPORT-WRITER`.
-- **Evidence, not theater** — missions record file paths, excerpts, and SHA-256 hashes.
-- **Real remediation** — the demo modifies only an isolated mission copy and then re-reads it to verify the fix.
-- **Replay-ready ledger** — every mission emits a six-event JSONL audit trail.
-- **Clone-and-run** — FastAPI, WebSockets, Docker, tests, and CI are included.
+Sentinel Swarm is an evidence-first, local multi-agent cybersecurity lab. **v0.1.0** is a clone-and-run demo: five named agent roles inspect a real SSH configuration fixture, challenge unsupported claims, apply a hardening patch to an isolated mission copy, verify the result, and write an evidence-backed report.
 
 ## 60-second quick start
 
@@ -38,18 +30,23 @@ cd sentinel-swarm
 docker compose up --build
 ```
 
-Open **http://localhost:7777**.
+Open **http://localhost:7777** and click **Run verified demo**.
 
 ### Python
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements-dev.txt
+pytest -q
 uvicorn app.main:app --reload --port 7777
 ```
 
-Then open **http://localhost:7777**. Interactive API docs are available at **http://localhost:7777/docs**.
+Then open **http://localhost:7777**. Interactive API docs: **http://localhost:7777/docs**.
+
+<p align="center">
+  <img src="assets/console-standby.jpg" alt="Sentinel Swarm standing by with backend online, five observable roles, and truth mode showing what is real versus not implemented" width="900">
+</p>
 
 ## What the verified demo does
 
@@ -59,40 +56,49 @@ Then open **http://localhost:7777**. Interactive API docs are available at **htt
 4. `THREAT-MODEL` explicitly rejects unsupported claims.
 5. `SECURE-CODING` changes `PermitRootLogin yes` and `PasswordAuthentication yes` to `no`.
 6. `RECON` re-reads the file and verifies both hardening settings.
-7. `REPORT-WRITER` creates a Markdown report while the mission writes an `events.jsonl` evidence ledger.
+7. `REPORT-WRITER` writes `report.md` and the mission persists a six-event `events.jsonl` ledger.
 
 ## Truthful scope
 
 | Capability | v0.1.0 |
 |---|---|
-| Backend-driven mission | ✅ Implemented |
-| WebSocket live events | ✅ Implemented |
-| Evidence SHA-256 hashes | ✅ Implemented |
-| Isolated per-mission workspace | ✅ Implemented |
-| Real config remediation | ✅ Implemented |
-| Post-change verification | ✅ Implemented |
-| Markdown report + JSONL ledger | ✅ Implemented |
-| Network scanning | ❌ Not implemented |
-| Arbitrary shell execution | ❌ Not implemented |
-| Autonomous exploitation | ❌ Not implemented |
-| Local LLM / Ollama | 🧭 Planned |
-| Swarm replay UI | 🧭 Planned |
+| Backend-driven mission | Implemented |
+| WebSocket live events | Implemented |
+| Evidence SHA-256 hashes | Implemented |
+| Isolated per-mission workspace | Implemented |
+| Real config remediation | Implemented |
+| Post-change verification | Implemented |
+| Markdown report + JSONL ledger | Implemented |
+| Network scanning | Not implemented |
+| Arbitrary shell execution | Not implemented |
+| Autonomous exploitation | Not implemented |
+| Local LLM / Ollama | Planned |
+| Swarm replay UI | Planned |
+
+<p align="center">
+  <img src="assets/truth-mode.jpg" alt="Truth mode panel: fixture analysis, SHA-256 evidence, remediation, and verification are real; network scanning and arbitrary shell are not implemented" width="420">
+</p>
+
+## Verified evidence
+
+These SHA-256 digests are produced from the bundled fixture and are locked by the test suite:
+
+| Artifact | Digest |
+|---|---|
+| Fixture before patch (`PermitRootLogin yes`, `PasswordAuthentication yes`) | `846a4fa9f53987da218fbda4e242eb07cdbf154c0ff1f027d94cd1fda554fdfa` |
+| Isolated copy after verified patch (`PermitRootLogin no`, `PasswordAuthentication no`) | `a144438e493b12fa3c265a4fa87bd762de2d51dfdc1333ccf0dfa376105bba46` |
+
+Each mission also writes `data/<mission_id>/events.jsonl` and `data/<mission_id>/report.md`. Generated workspaces are gitignored.
+
+<p align="center">
+  <img src="assets/mission-stream.jpg" alt="Full mission stream showing RECON, EXPLOIT-ANALYSIS, THREAT-MODEL, SECURE-CODING, verification, report writer, and SHA-256 evidence blocks" width="520">
+</p>
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    UI[Web UI] -->|WebSocket / HTTP| API[FastAPI control plane]
-    API --> M[Mission engine]
-    M --> R[RECON]
-    M --> E[EXPLOIT-ANALYSIS]
-    M --> T[THREAT-MODEL]
-    M --> S[SECURE-CODING]
-    M --> W[REPORT-WRITER]
-    M --> F[(Isolated mission workspace)]
-    F --> L[events.jsonl]
-    F --> P[report.md]
-```
+<p align="center">
+  <img src="assets/architecture.svg" alt="Sentinel Swarm v0.1.0 architecture: Web UI to FastAPI over HTTP and WebSocket, deterministic mission engine, five observable roles, and an isolated workspace with events.jsonl and report.md" width="100%">
+</p>
 
 The current "agents" are explicit deterministic roles in the mission engine. A live LLM is **not** required or claimed in v0.1.0.
 
@@ -112,19 +118,19 @@ The current "agents" are explicit deterministic roles in the mission engine. A l
 pytest -q
 ```
 
-The test suite verifies the health/status contract, real fixture remediation, report + ledger creation, HTTP validation, WebSocket mission streaming, and WebSocket input limits.
+The suite verifies the health/status contract, real fixture remediation, documented SHA-256 evidence, report + ledger creation, HTTP validation, WebSocket mission streaming, and WebSocket input limits.
 
 ## Project layout
 
 ```text
-.github/    CI, issue templates, PR template, Dependabot
+.github/    CI, issue templates, PR template, Dependabot, release workflow
 app/        FastAPI control plane + mission engine
-assets/     README artwork
+assets/     README screenshots and architecture diagram
 static/     Sentinel Swarm mission console
 range/      safe reproducible demo fixture
 data/       generated mission workspaces (gitignored)
 tests/      regression tests
-docs/       architecture and design notes
+docs/       architecture notes and GitHub Release copy
 ```
 
 ## Security
