@@ -1,39 +1,70 @@
+from fastapi.testclient import TestClient
+
 from app.main import app
 from app.mission import ROOT, run_mission
-from fastapi.testclient import TestClient
 
 client = TestClient(app)
 
-def test_status_truthful():
-    r = client.get('/api/status')
-    assert r.status_code == 200
-    truth = r.json()['truth']
-    assert truth['fixture_analysis'] is True
-    assert truth['network_scan'] is False
-    assert truth['shell'] is False
 
-def test_mission_real_patch_and_report():
-    out = run_mission('test fixture')
-    assert out.status == 'completed'
-    assert [e.agent for e in out.events] == ['RECON','EXPLOIT-ANALYSIS','THREAT-MODEL','SECURE-CODING','RECON','REPORT-WRITER']
+def test_health_and_status_truthful():
+    health = client.get("/api/health")
+    assert health.status_code == 200
+    assert health.json()["status"] == "ok"
+
+    response = client.get("/api/status")
+    assert response.status_code == 200
+    truth = response.json()["truth"]
+    assert truth["fixture_analysis"] is True
+    assert truth["network_scan"] is False
+    assert truth["shell"] is False
+
+
+def test_mission_real_patch_report_and_ledger():
+    out = run_mission("test fixture")
+    assert out.status == "completed"
+    assert [event.agent for event in out.events] == [
+        "RECON",
+        "EXPLOIT-ANALYSIS",
+        "THREAT-MODEL",
+        "SECURE-CODING",
+        "RECON",
+        "REPORT-WRITER",
+    ]
+
     report = ROOT / out.report_path
-    assert report.exists()
-    target = report.parent / 'sshd_config'
-    text = target.read_text()
-    assert 'PermitRootLogin no' in text
-    assert 'PasswordAuthentication no' in text
-    assert 'PermitRootLogin yes' not in text
+    target = report.parent / "sshd_config"
+    ledger = report.parent / "events.jsonl"
+    assert report.exists() and target.exists() and ledger.exists()
+
+    text = target.read_text(encoding="utf-8")
+    assert "PermitRootLogin no" in text
+    assert "PasswordAuthentication no" in text
+    assert "PermitRootLogin yes" not in text
+    assert len(ledger.read_text(encoding="utf-8").splitlines()) == 6
+
+
+def test_http_validation_rejects_empty_task():
+    response = client.post("/api/missions", json={"task": ""})
+    assert response.status_code == 422
+
 
 def test_websocket_streams_real_mission():
-    with client.websocket_connect('/ws/mission') as ws:
-        ws.send_json({'task':'websocket test'})
-        events=[]
+    with client.websocket_connect("/ws/mission") as ws:
+        ws.send_json({"task": "websocket test"})
+        events = []
         while True:
-            msg=ws.receive_json()
-            if msg['type']=='event':
-                events.append(msg['event'])
-            elif msg['type']=='complete':
-                assert msg['report_path'].endswith('/report.md')
+            message = ws.receive_json()
+            if message["type"] == "event":
+                events.append(message["event"])
+            elif message["type"] == "complete":
+                assert message["report_path"].endswith("/report.md")
                 break
-        assert len(events)==6
-        assert events[-1]['agent']=='REPORT-WRITER'
+        assert len(events) == 6
+        assert events[-1]["agent"] == "REPORT-WRITER"
+
+
+def test_websocket_rejects_oversized_task():
+    with client.websocket_connect("/ws/mission") as ws:
+        ws.send_json({"task": "x" * 501})
+        message = ws.receive_json()
+        assert message["type"] == "error"
