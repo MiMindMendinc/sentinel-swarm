@@ -5,6 +5,7 @@
 **Local AI cybersecurity agents you can actually watch work.**
 
 [![CI](https://github.com/MiMindMendinc/sentinel-swarm/actions/workflows/ci.yml/badge.svg)](https://github.com/MiMindMendinc/sentinel-swarm/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/MiMindMendinc/sentinel-swarm?include_prereleases)](https://github.com/MiMindMendinc/sentinel-swarm/releases)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.128-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -80,21 +81,9 @@ Then open **http://localhost:7777**. Interactive API docs are available at **htt
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    UI[Web UI] -->|WebSocket / HTTP| API[FastAPI control plane]
-    API --> M[Mission engine]
-    M --> R[RECON]
-    M --> E[EXPLOIT-ANALYSIS]
-    M --> T[THREAT-MODEL]
-    M --> S[SECURE-CODING]
-    M --> W[REPORT-WRITER]
-    M --> F[(Isolated mission workspace)]
-    F --> L[events.jsonl]
-    F --> P[report.md]
-```
+<img src="assets/architecture.svg" alt="Sentinel Swarm v0.1.0 architecture showing the Web UI, FastAPI control plane, deterministic mission engine, five observable roles, and isolated evidence workspace" width="100%">
 
-The current "agents" are explicit deterministic roles in the mission engine. A live LLM is **not** required or claimed in v0.1.0.
+The current "agents" are explicit deterministic roles in the mission engine. A live LLM is **not** required or claimed in v0.1.0. The diagram is a static SVG so GitHub renders it immediately instead of a Mermaid loading state.
 
 ## API
 

@@ -20,6 +20,7 @@ uvicorn app.main:app --reload --port 7777
 - Keep generated mission data out of git.
 - Preserve the local-first default.
 - Update `README.md`, `CHANGELOG.md`, or `ROADMAP.md` when behavior or scope changes.
+- Version tags (`v*`) publish a GitHub Release from the matching `docs/release-<tag>.md` file. Add that notes file before tagging.
 
 ## New capabilities
 
