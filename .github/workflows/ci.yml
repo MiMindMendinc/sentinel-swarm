@@ -33,3 +33,34 @@ jobs:
         run: python -m pip install --upgrade pip && pip install -r requirements-dev.txt
       - name: Run tests
         run: pytest -q
+
+  docker:
+    name: Docker smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build and start hardened Compose stack
+        run: docker compose up -d --build
+      - name: Wait for health endpoint
+        run: |
+          for i in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:7777/api/health; then
+              exit 0
+            fi
+            sleep 1
+          done
+          docker compose logs
+          exit 1
+      - name: Run mission through containerized API
+        run: |
+          curl --fail --silent \
+            -H 'Content-Type: application/json' \
+            -d '{"task":"CI container smoke test"}' \
+            http://127.0.0.1:7777/api/missions | python -m json.tool
+      - name: Show container status on failure
+        if: failure()
+        run: docker compose ps && docker compose logs
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
