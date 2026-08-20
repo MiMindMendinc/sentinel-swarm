@@ -1,0 +1,25 @@
+name: Feature request
+description: Propose an evidence-first Sentinel Swarm capability
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What user or engineering problem should this address?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed capability
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: How should it prove its result?
+      description: Describe the evidence, verification, or replay artifact the feature should produce.
+    validations:
+      required: true

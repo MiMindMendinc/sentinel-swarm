@@ -1,0 +1,115 @@
+from __future__ import annotations
+
+import hashlib
+import json
+import shutil
+import uuid
+from pathlib import Path
+
+from .models import Event, Evidence, MissionResult
+
+ROOT = Path(__file__).resolve().parents[1]
+RANGE = ROOT / "range" / "ssh-misconfig" / "sshd_config"
+DATA = ROOT / "data"
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    digest.update(path.read_bytes())
+    return digest.hexdigest()
+
+
+def ev(seq: int, agent: str, kind: str, message: str, evidence: Evidence | None = None) -> Event:
+    return Event(seq=seq, agent=agent, kind=kind, message=message, evidence=evidence)
+
+
+def _single_line_task(task: str) -> str:
+    return " ".join(task.replace("\r", " ").replace("\n", " ").split())
+
+
+def run_mission(task: str) -> MissionResult:
+    task = _single_line_task(task)
+    mission_id = uuid.uuid4().hex[:12]
+    workspace = DATA / mission_id
+    workspace.mkdir(parents=True, exist_ok=False)
+    target = workspace / "sshd_config"
+    shutil.copy2(RANGE, target)
+
+    lines = target.read_text(encoding="utf-8").splitlines()
+    root_line = next((i + 1 for i, value in enumerate(lines) if value.strip().lower() == "permitrootlogin yes"), None)
+    pass_line = next((i + 1 for i, value in enumerate(lines) if value.strip().lower() == "passwordauthentication yes"), None)
+    if root_line is None or pass_line is None:
+        raise RuntimeError("Built-in fixture is not in the expected vulnerable state")
+
+    digest_before = sha256(target)
+    evidence = Evidence(
+        path=str(target.relative_to(ROOT)),
+        sha256=digest_before,
+        excerpt=f"PermitRootLogin yes (line {root_line}); PasswordAuthentication yes (line {pass_line})",
+    )
+    events = [
+        ev(1, "RECON", "observed", f"Inspected the isolated mission copy for task: {task}", evidence),
+        ev(2, "EXPLOIT-ANALYSIS", "analysis", "Root SSH login and password authentication are enabled in the supplied demo configuration. This increases credential and remote-access risk."),
+        ev(3, "THREAT-MODEL", "challenge", "Finding accepted because it is backed by configuration evidence, not a version guess, CVE claim, or simulated network result."),
+    ]
+
+    patched: list[str] = []
+    for line in lines:
+        normalized = line.strip().lower()
+        if normalized == "permitrootlogin yes":
+            patched.append("PermitRootLogin no")
+        elif normalized == "passwordauthentication yes":
+            patched.append("PasswordAuthentication no")
+        else:
+            patched.append(line)
+
+    target.write_text("\n".join(patched) + "\n", encoding="utf-8")
+    digest_after = sha256(target)
+    patch_evidence = Evidence(
+        path=str(target.relative_to(ROOT)),
+        sha256=digest_after,
+        excerpt="PermitRootLogin no; PasswordAuthentication no",
+    )
+    events.append(
+        ev(4, "SECURE-CODING", "remediation", "Applied a minimal hardening patch to the isolated mission copy only.", patch_evidence)
+    )
+
+    new_lines = target.read_text(encoding="utf-8").splitlines()
+    verified = "PermitRootLogin no" in new_lines and "PasswordAuthentication no" in new_lines
+    if not verified:
+        raise RuntimeError("Verification failed")
+    events.append(ev(5, "RECON", "verified", "Re-read the patched file and verified both hardening settings are present.", patch_evidence))
+
+    report = workspace / "report.md"
+    report.write_text(
+        "# Sentinel Swarm Mission Report\n\n"
+        f"Mission: `{mission_id}`\n\n"
+        f"Task: {task}\n\n"
+        "## Verified finding\n"
+        f"- `PermitRootLogin yes` observed at line {root_line}.\n"
+        f"- `PasswordAuthentication yes` observed at line {pass_line}.\n\n"
+        "## Remediation\n"
+        "- Changed `PermitRootLogin` to `no`.\n"
+        "- Changed `PasswordAuthentication` to `no`.\n\n"
+        "## Verification\n"
+        f"- Before SHA256: `{digest_before}`\n"
+        f"- After SHA256: `{digest_after}`\n"
+        "- Patched mission copy re-read successfully.\n",
+        encoding="utf-8",
+    )
+    events.append(
+        ev(
+            6,
+            "REPORT-WRITER",
+            "report",
+            "Wrote an evidence-backed Markdown report for this mission.",
+            Evidence(path=str(report.relative_to(ROOT)), sha256=sha256(report), excerpt="Sentinel Swarm Mission Report"),
+        )
+    )
+
+    ledger = workspace / "events.jsonl"
+    ledger.write_text(
+        "\n".join(json.dumps(event.model_dump(), separators=(",", ":")) for event in events) + "\n",
+        encoding="utf-8",
+    )
+    return MissionResult(mission_id=mission_id, events=events, report_path=str(report.relative_to(ROOT)))

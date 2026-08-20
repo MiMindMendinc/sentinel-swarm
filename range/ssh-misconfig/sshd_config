@@ -1,0 +1,5 @@
+# Sentinel Swarm safe demo fixture
+Port 22
+PermitRootLogin yes
+PasswordAuthentication yes
+PubkeyAuthentication yes
