@@ -2,17 +2,25 @@ services:
   sentinel:
     build: .
     ports:
-      - "7777:7777"
+      - "127.0.0.1:7777:7777"
     volumes:
       - sentinel-data:/app/data
     restart: unless-stopped
+    init: true
     read_only: true
+    pids_limit: 128
+    mem_limit: 512m
+    cpus: 1.0
     tmpfs:
-      - /tmp
+      - /tmp:rw,noexec,nosuid,nodev,size=16m,mode=1777
     security_opt:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:7777/api/health', timeout=2)"]
       interval: 15s

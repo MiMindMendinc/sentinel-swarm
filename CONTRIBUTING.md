@@ -7,9 +7,10 @@ Thanks for helping improve Sentinel Swarm. The project values **reproducibility,
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
-pip install -r requirements-dev.txt
-pytest -q
-uvicorn app.main:app --reload --port 7777
+python -m pip install --upgrade pip==26.2.1
+python -m pip install --require-hashes -r requirements-dev.lock
+make test
+make run
 ```
 
 ## Pull request expectations
@@ -35,7 +36,9 @@ Any new tool or agent capability should document:
 ## Before opening a PR
 
 ```bash
-pytest -q
+make lint
+make test
+make audit
 ```
 
 If Docker is available, also verify:
