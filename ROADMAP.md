@@ -4,10 +4,12 @@
 - Backend-driven mission
 - Five observable roles
 - Per-mission workspace
-- SHA-256 evidence
+- Separate before/after SHA-256 evidence
 - Real local fixture remediation + verification
 - WebSocket event streaming
-- JSONL event ledger
+- Hash-chained JSONL event ledger
+- Anchored artifact manifest + independent verifier
+- Bounded local API/container boundary
 
 ## v0.2 — Local model adapter
 - Ollama integration
@@ -22,6 +24,6 @@
 
 ## Later
 - Swarm replay UI
-- Signed evidence/flight recorder
+- Cryptographically signed evidence/flight recorder
 - Benchmarks
 - Agent/tool/scenario SDKs
